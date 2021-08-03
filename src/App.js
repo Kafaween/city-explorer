@@ -12,6 +12,7 @@ export class App extends Component {
     this.state = {
       locationData: '',
       error: false,
+      req: '',
     };
   }
 
@@ -22,11 +23,16 @@ export class App extends Component {
       const response = await axios.get(
         `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_TOKEN}&q=${location}&format=json`
       );
+      const request = await axios.get(
+        `http://localhost:8000/weather?lat=${response.data[0].lat}&lon=${response.data[0].lon}&loc=${response.data[0].display_name}`
+      );
+      console.log(request.data[2][0]);
 
       console.log('our axios response', response.data[0]);
-
+      console.log(response.data[0].display_name[0]);
       this.setState({
         locationData: response.data[0],
+        req: request.data,
       });
     } catch {
       this.setState({
@@ -51,11 +57,7 @@ export class App extends Component {
           <div className='text-center'>
             <h1>Location information</h1>
 
-            {this.state.error && (
-              <h1>
-                Erorre 404<h2>Unable to geocode</h2>
-              </h1>
-            )}
+            {this.state.error && <h1>error</h1>}
 
             {this.state.locationData.display_name && (
               <p>{this.state.locationData.display_name}</p>
@@ -66,6 +68,16 @@ export class App extends Component {
                 src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_TOKEN}&center=${this.state.locationData.lat},${this.state.locationData.lon}&zoom=16&size=480x480&markers=icon:large-red-cutout|${this.state.locationData.lat},${this.state.locationData.lon}&markers=icon:large-red-cutout|${this.state.locationData.lat},${this.state.locationData.lon}&path=fillcolor:%23add8e6|weight:1|color:blue|${this.state.locationData.lat},${this.state.locationData.lon}|${this.state.locationData.lat},${this.state.locationData.lon}|${this.state.locationData.lat},${this.state.locationData.lon}|${this.state.locationData.lon}`}
                 alt='map'
               />
+            )}
+            {this.state.req && (
+              <div>
+                <p>{this.state.req[2][0].date1}</p>
+                <p>{this.state.req[2][0].weatherstate1}</p>
+                <p>{this.state.req[2][0].date2}</p>
+                <p>{this.state.req[2][0].weatherstate2}</p>
+                <p>{this.state.req[2][0].date3}</p>
+                <p>{this.state.req[2][0].weatherstate3}</p>
+              </div>
             )}
           </div>
         </Row>
