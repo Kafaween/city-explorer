@@ -26,7 +26,7 @@ export class App extends Component {
       const request = await axios.get(
         `http://localhost:8000/weather?lat=${response.data[0].lat}&lon=${response.data[0].lon}&loc=${response.data[0].display_name}`
       );
-      console.log(request.data[2][0]);
+      console.log(request.data);
 
       console.log('our axios response', response.data[0]);
       console.log(response.data[0].display_name[0]);
@@ -71,12 +71,14 @@ export class App extends Component {
             )}
             {this.state.req && (
               <div>
-                <p>{this.state.req[2][0].date1}</p>
-                <p>{this.state.req[2][0].weatherstate1}</p>
-                <p>{this.state.req[2][0].date2}</p>
-                <p>{this.state.req[2][0].weatherstate2}</p>
-                <p>{this.state.req[2][0].date3}</p>
-                <p>{this.state.req[2][0].weatherstate3}</p>
+                {this.state.req.map((e) => {
+                  return (
+                    <div>
+                      <p>{e.date}</p>
+                      <p>{e.description}</p>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
