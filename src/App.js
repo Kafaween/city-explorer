@@ -13,6 +13,7 @@ export class App extends Component {
       locationData: '',
       error: false,
       req: '',
+      req1: '',
     };
   }
 
@@ -26,6 +27,9 @@ export class App extends Component {
       const request = await axios.get(
         `http://localhost:8000/weather?lat=${response.data[0].lat}&lon=${response.data[0].lon}&loc=${response.data[0].display_name}`
       );
+      const request1 = await axios.get(
+        `http://localhost:8000/movies?loc=${location}`
+      );
       console.log(request.data);
 
       console.log('our axios response', response.data[0]);
@@ -33,6 +37,7 @@ export class App extends Component {
       this.setState({
         locationData: response.data[0],
         req: request.data,
+        req1: request1.data,
       });
     } catch {
       this.setState({
@@ -52,7 +57,7 @@ export class App extends Component {
               type='text'
               placeholder='Enter the location name you want to search'
             />
-            <input type='submit' value='search Location' />
+            <input type='submit' value='explore!' />
           </form>
           <div className='text-center'>
             <h1>Location information</h1>
@@ -76,6 +81,23 @@ export class App extends Component {
                     <div>
                       <p>{e.date}</p>
                       <p>{e.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {this.state.req1 && (
+              <div>
+                {this.state.req1.map((e) => {
+                  return (
+                    <div>
+                      <p>{e.title}</p>
+                      <p>{e.overview}</p>
+                      <p>{e.vote_average}</p>
+                      <p>{e.vote_count}</p>
+                      <p>{e.poster_path}</p>
+                      <p>{e.popularity}</p>
+                      <p>{e.release_date}</p>
                     </div>
                   );
                 })}
