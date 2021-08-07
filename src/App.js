@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Alert } from 'bootstrap';
 
 export class App extends Component {
   constructor(props) {
@@ -25,10 +26,10 @@ export class App extends Component {
         `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_TOKEN}&q=${location}&format=json`
       );
       const request = await axios.get(
-        `http://localhost:8000/weather?lat=${response.data[0].lat}&lon=${response.data[0].lon}&loc=${response.data[0].display_name}`
+        `${process.env.REACT_APP_SERVER_URL}/weather?lat=${response.data[0].lat}&lon=${response.data[0].lon}&loc=${response.data[0].display_name}`
       );
       const request1 = await axios.get(
-        `http://localhost:8000/movies?loc=${location}`
+        `${process.env.REACT_APP_SERVER_URL}/movies?loc=${location}`
       );
       console.log(request.data);
 
@@ -39,9 +40,10 @@ export class App extends Component {
         req: request.data,
         req1: request1.data,
       });
-    } catch {
+    } catch (Error) {
+      console.log(Error);
       this.setState({
-        error: true,
+        error: false,
       });
     }
   };
@@ -62,7 +64,13 @@ export class App extends Component {
           <div className='text-center'>
             <h1>Location information</h1>
 
-            {this.state.error && <h1>error</h1>}
+            {this.state.error && (
+              <div>
+                <Alert key={1} variant={'danger'}>
+                  {this.state.error}
+                </Alert>
+              </div>
+            )}
 
             {this.state.locationData.display_name && (
               <p>{this.state.locationData.display_name}</p>
@@ -95,7 +103,11 @@ export class App extends Component {
                       <p>{e.overview}</p>
                       <p>{e.vote_average}</p>
                       <p>{e.vote_count}</p>
-                      <p>{e.poster_path}</p>
+
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w185${e.poster_path}`}
+                        alt='not available'
+                      />
                       <p>{e.popularity}</p>
                       <p>{e.release_date}</p>
                     </div>
