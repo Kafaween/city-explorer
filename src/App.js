@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Image from 'react-bootstrap/Image';
+// import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import WeatherDay from './components/WeatherDay';
 import Movies from './components/Movies';
 import Init from './components/Init';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Alert } from 'bootstrap';
+// import { Alert } from 'bootstrap';
 
 export class App extends Component {
   constructor(props) {
